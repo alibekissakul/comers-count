@@ -46,7 +46,7 @@ class Counter extends Component
 
         $model->update(['counter' => ++$model->counter]);
 
-        broadcast(new UpdateCounter($model->counter))->toOthers();
+        event(new UpdateCounter($model->counter));
     }
 
     protected function decrementCounterModel()
@@ -59,6 +59,6 @@ class Counter extends Component
 
         $model->update(['counter' => --$model->counter]);
 
-        broadcast(new UpdateCounter($model->counter))->toOthers();
+        event(new UpdateCounter($model->counter));
     }
 }
