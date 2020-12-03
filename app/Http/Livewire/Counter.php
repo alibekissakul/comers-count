@@ -28,27 +28,36 @@ class Counter extends Component
 
     public function increment()
     {
-        $this->updateCounterModel(++$this->counter);
+        $this->incrementCounterModel();
     }
 
     public function decrement()
     {
-        $this->updateCounterModel(--$this->counter);
+        $this->decrementCounterModel();
     }
 
-    protected function updateCounterModel(int $counter)
+    protected function incrementCounterModel()
     {
-        if ($counter < 0) {
-            return;
-        }
-
         $model = CounterModel::find(1);
 
         if (!$model) {
             return;
         }
 
-        $model->update(['counter' => $counter]);
+        $model->update(['counter' => ++$model->counter]);
+
+        broadcast(new UpdateCounter($model->counter))->toOthers();
+    }
+
+    protected function decrementCounterModel()
+    {
+        $model = CounterModel::find(1);
+
+        if (!$model) {
+            return;
+        }
+
+        $model->update(['counter' => --$model->counter]);
 
         broadcast(new UpdateCounter($model->counter))->toOthers();
     }
